@@ -5,7 +5,7 @@
         <v-row>
           <v-col>
             <div class="text-center luckiest">
-              Current Player: Kayla
+              Current Player: {{ players[activePlayerIndex].name }}
             </div>
           </v-col>
         </v-row>
@@ -23,7 +23,7 @@
               Total Score:
             </div>
             <div class="text-center luckiest">
-              1800
+              {{ players[activePlayerIndex].score }}
             </div>
           </v-col>
           <v-col class="px-0">
@@ -43,8 +43,8 @@
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(CONSTANTS.sets.one)">
-            One - ({{ setCounts[CONSTANTS.sets.one] }})
+          @click="incrementTurnScore(sets.one)">
+            One - ({{ setCounts[sets.one] }})
           </v-btn>
         </v-col>
         <v-col>
@@ -53,8 +53,8 @@
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(CONSTANTS.sets.five)">
-            Five - ({{setCounts[CONSTANTS.sets.five]}})
+          @click="incrementTurnScore(sets.five)">
+            Five - ({{setCounts[sets.five]}})
           </v-btn>
         </v-col>
       </v-row>
@@ -85,8 +85,8 @@
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(CONSTANTS.sets.fourOak)">
-            4 of a kind - ({{setCounts[CONSTANTS.sets.fourOak]}})
+          @click="incrementTurnScore(sets.fourOak)">
+            4 of a kind - ({{setCounts[sets.fourOak]}})
           </v-btn>
         </v-col>
         <v-col>
@@ -95,30 +95,8 @@
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(CONSTANTS.sets.threePairs)">
-            3 pairs - ({{setCounts[CONSTANTS.sets.threePairs]}})
-          </v-btn>
-        </v-col>
-      </v-row>
-      <v-row justify="center" align="center">
-        <v-col>
-          <v-btn
-          class="luckiest"
-          dark
-          color="secondary"
-          block
-          @click="incrementTurnScore(CONSTANTS.sets.fiveOak)">
-            5 of a kind - ({{setCounts[CONSTANTS.sets.fiveOak]}})
-          </v-btn>
-        </v-col>
-        <v-col>
-          <v-btn
-          class="luckiest"
-          dark
-          color="secondary"
-          block
-          @click="incrementTurnScore(CONSTANTS.sets.straight)">
-            Straight - ({{setCounts[CONSTANTS.sets.straight]}})
+          @click="incrementTurnScore(sets.threePairs)">
+            3 pairs - ({{setCounts[sets.threePairs]}})
           </v-btn>
         </v-col>
       </v-row>
@@ -129,8 +107,8 @@
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(CONSTANTS.sets.sixOak)">
-            6 of a kind - ({{setCounts[CONSTANTS.sets.sixOak]}})
+          @click="incrementTurnScore(sets.fiveOak)">
+            5 of a kind - ({{setCounts[sets.fiveOak]}})
           </v-btn>
         </v-col>
         <v-col>
@@ -139,8 +117,8 @@
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(CONSTANTS.sets.twoTriplets)">
-            2 Triplets - ({{setCounts[CONSTANTS.sets.twoTriplets]}})
+          @click="incrementTurnScore(sets.straight)">
+            Straight - ({{setCounts[sets.straight]}})
           </v-btn>
         </v-col>
       </v-row>
@@ -151,8 +129,30 @@
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(CONSTANTS.sets.fourOakPair)">
-            4 of a kind & a pair - ({{setCounts[CONSTANTS.sets.fourOakPair]}})
+          @click="incrementTurnScore(sets.sixOak)">
+            6 of a kind - ({{setCounts[sets.sixOak]}})
+          </v-btn>
+        </v-col>
+        <v-col>
+          <v-btn
+          class="luckiest"
+          dark
+          color="secondary"
+          block
+          @click="incrementTurnScore(sets.twoTriplets)">
+            2 Triplets - ({{setCounts[sets.twoTriplets]}})
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-row justify="center" align="center">
+        <v-col>
+          <v-btn
+          class="luckiest"
+          dark
+          color="secondary"
+          block
+          @click="incrementTurnScore(sets.fourOakPair)">
+            4 of a kind & a pair - ({{ setCounts[sets.fourOakPair] }})
           </v-btn>
         </v-col>
       </v-row>
@@ -162,18 +162,20 @@
 
 <script>
 import { sync } from 'vuex-pathify';
-import CONSTANTS from '@/constants';
+import { sets } from '@/constants';
 
 export default {
   name: 'home',
   data: () => ({
-    CONSTANTS,
+    sets,
   }),
   computed: {
-    threeXmultiplier: sync('game@settings.threeXmultiplier'),
-    turnScore: sync('turn@score'),
-    setCounts: sync('turn@setCounts'),
-    setPoints: sync('game@settings.setPoints'),
+    threeXmultiplier: sync('threeXmultiplier'),
+    turnScore: sync('turnScore'),
+    setCounts: sync('setCounts'),
+    setPoints: sync('setPoints'),
+    activePlayerIndex: sync('activePlayerIndex'),
+    players: sync('players'),
     threeXset() {
       const mapping = {
         1: 'one',
@@ -183,7 +185,7 @@ export default {
         5: 'five',
         6: 'six',
       };
-      return CONSTANTS.sets[`threeX${mapping[this.threeXmultiplier]}`];
+      return sets[`threeX${mapping[this.threeXmultiplier]}`];
     },
     threeXcount() {
       let aggregate = 0;

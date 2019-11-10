@@ -37,7 +37,7 @@
     dark
     color="secondary"
     :style="`background-color: ${$vuetify.theme.currentTheme.primary}`">
-      <v-btn>
+      <v-btn @click="endTurn">
         <span>End Turn</span>
         <v-icon>mdi-check</v-icon>
       </v-btn>
@@ -57,8 +57,27 @@
 </template>
 
 <script>
+import { sync } from 'vuex-pathify';
+
 export default {
   name: 'App',
+  computed: {
+    turnScore: sync('turnScore'),
+    activePlayerIndex: sync('activePlayerIndex'),
+    players: sync('players'),
+    setCounts: sync('setCounts'),
+  },
+  methods: {
+    endTurn() {
+      this.players[this.activePlayerIndex].score += this.turnScore;
+      this.turnScore = 0;
+      Object.keys(this.setCounts).forEach((set) => {
+        this.setCounts[set] = 0;
+      });
+      this.activePlayerIndex = this.activePlayerIndex === this.players.length - 1
+        ? 0 : this.activePlayerIndex += 1;
+    },
+  },
 };
 </script>
 
