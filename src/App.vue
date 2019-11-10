@@ -1,32 +1,104 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+      fixed
+    >
+      <v-toolbar-title>
+        <h2 class="luckiest-title luckiest mt-2">
+          Farkle Scorer
+        </h2>
+      </v-toolbar-title>
+
+      <v-spacer/>
+
+      <v-btn icon color="secondary" x-large>
+        <v-icon>mdi-restart</v-icon>
+      </v-btn>
+
+      <v-divider vertical class="mx-2"/>
+
+      <v-btn icon color="secondary" x-large>
+        <v-icon>mdi-format-list-numbered</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-content>
+      <v-container>
+        <router-view/>
+      </v-container>
+    </v-content>
+
+    <v-bottom-navigation
+    fixed
+    grow
+    dark
+    color="secondary"
+    :style="`background-color: ${$vuetify.theme.currentTheme.primary}`">
+      <v-btn>
+        <span>End Turn</span>
+        <v-icon>mdi-check</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Farkle</span>
+        <v-icon>mdi-emoticon-sad-outline</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Undo</span>
+        <v-icon>mdi-undo</v-icon>
+      </v-btn>
+
+    </v-bottom-navigation>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+export default {
+  name: 'App',
+};
+</script>
+
+
+<style>
+@font-face {
+  font-family: 'Luckiest Guy';
+  font-weight: 600;
+  src: url('./assets/LuckiestGuy.ttf');
 }
 
-#nav {
-  padding: 30px;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.luckiest {
+  font-weight: 600;
+  font-family: 'Luckiest Guy';
+  color: white;
+  text-shadow:
+  0px 0px 0 var(--v-primary-base),
+  -1.5px -1.5px 0 var(--v-primary-base),
+  1.5px -1.5px 0 var(--v-primary-base),
+  -1.5px 1.5px 0 var(--v-primary-base),
+  1.5px 1.5px 0 var(--v-primary-base);
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.luckiest-title {
+  font-weight: 600;
+  font-family: 'Luckiest Guy';
+  color: white;
+  text-shadow:
+  0px 0px 0 var(--v-primary-base),
+  -3px -3px 0 var(--v-primary-base),
+  3px -3px 0 var(--v-primary-base),
+  -3px 3px 0 var(--v-primary-base),
+  3px 3px 0 var(--v-primary-base),
+  -6px -6px 0 var(--v-accent-base),
+  6px -6px 0 var(--v-accent-base),
+  -6px 6px 0 var(--v-accent-base),
+  6px 6px 0 var(--v-accent-base);
+  padding-left: 3px;
+  padding-right: 3px;
 }
 </style>
