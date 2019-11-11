@@ -171,6 +171,7 @@
 
 <script>
 import { sync } from 'vuex-pathify';
+import { history } from '@/utils/history';
 
 export default {
   name: 'home',
@@ -202,6 +203,7 @@ export default {
   },
   methods: {
     incrementSet(set) {
+      history.push(this.$store.state);
       this.turnScore += set.points;
       this.diceCount -= set.dice;
       if (this.diceCount === 0) this.diceCount = 6;

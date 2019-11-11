@@ -6,11 +6,11 @@ import { sets } from '@/constants';
 const state = {
   players: [
     {
-      name: 'Benji',
+      name: 'Kayla',
       score: 0,
     },
     {
-      name: 'Kayla',
+      name: 'Benji',
       score: 0,
     },
   ],
@@ -19,7 +19,7 @@ const state = {
   turnScore: 0,
   sets,
   diceCount: 6,
-  history: []
+  activeGame: false,
 };
 
 const mutations = make.mutations(state);

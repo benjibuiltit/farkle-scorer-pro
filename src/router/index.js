@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import Home from '../views/Home';
+import Scoreboard from '../views/Scoreboard';
+import Configure from '../views/Configure';
+import store from '../store/index';
 
 Vue.use(VueRouter);
 
@@ -10,14 +13,16 @@ const routes = [
     name: 'home',
     component: Home,
   },
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
-  // },
+  {
+    path: '/scoreboard',
+    name: 'scoreboard',
+    component: Scoreboard
+  },
+  {
+    path: '/configure',
+    name: 'configure',
+    component: Configure
+  }
 ];
 
 const router = new VueRouter({
@@ -25,5 +30,16 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  const isActiveGame = store.get('activeGame');
+  if (!isActiveGame && to.path !== '/configure') {
+    next('/configure')
+  } else if (to.path === '/configure' && isActiveGame) {
+    next('/');
+  } else {
+    next();
+  }
+})
 
 export default router;

@@ -1,29 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-      fixed
-    >
-      <v-toolbar-title>
-        <h2 class="luckiest-title luckiest mt-2">
-          Farkle Scorer
-        </h2>
-      </v-toolbar-title>
-
-      <v-spacer/>
-
-      <v-btn icon color="secondary" x-large>
-        <v-icon>mdi-restart</v-icon>
-      </v-btn>
-
-      <v-divider vertical class="mx-2"/>
-
-      <v-btn icon color="secondary" x-large>
-        <v-icon>mdi-format-list-numbered</v-icon>
-      </v-btn>
-    </v-app-bar>
+    <AppBar />
 
     <v-content>
       <v-container>
@@ -32,6 +9,7 @@
     </v-content>
 
     <v-bottom-navigation
+    v-if="$route.path === '/'"
     fixed
     grow
     dark
@@ -47,7 +25,7 @@
         <v-icon>mdi-emoticon-sad-outline</v-icon>
       </v-btn>
 
-      <v-btn>
+      <v-btn @click="undo">
         <span>Undo</span>
         <v-icon>mdi-undo</v-icon>
       </v-btn>
@@ -57,10 +35,15 @@
 </template>
 
 <script>
+import AppBar from '@/components/AppBar'
 import { sync } from 'vuex-pathify';
+import { history } from '@/utils/history';
 
 export default {
   name: 'App',
+  components: {
+    AppBar
+  },
   computed: {
     turnScore: sync('turnScore'),
     activePlayerIndex: sync('activePlayerIndex'),
@@ -85,9 +68,15 @@ export default {
         ? 0 : this.activePlayerIndex += 1;
       this.diceCount = 6;
       this.turnScore = 0;
-
+    },
+    convertObject(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    },
+    undo() {
+      const lastState = history.pop();
+      this.$store.commit('replaceState', lastState);
     }
-  },
+  }
 };
 </script>
 
