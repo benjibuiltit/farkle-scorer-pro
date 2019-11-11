@@ -42,7 +42,7 @@
         <v-icon>mdi-check</v-icon>
       </v-btn>
 
-      <v-btn>
+      <v-btn @click="farkle">
         <span>Farkle</span>
         <v-icon>mdi-emoticon-sad-outline</v-icon>
       </v-btn>
@@ -71,14 +71,22 @@ export default {
   methods: {
     endTurn() {
       this.players[this.activePlayerIndex].score += this.turnScore;
-      this.turnScore = 0;
+      this.cyclePlayers();
+
+    },
+    farkle() {
+      this.cyclePlayers();
+    },
+    cyclePlayers() {
       Object.values(this.sets).forEach((set) => {
         set.count = 0;
       });
-      this.diceCount = 6;
       this.activePlayerIndex = this.activePlayerIndex === this.players.length - 1
         ? 0 : this.activePlayerIndex += 1;
-    },
+      this.diceCount = 6;
+      this.turnScore = 0;
+
+    }
   },
 };
 </script>

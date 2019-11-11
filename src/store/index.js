@@ -18,7 +18,8 @@ const state = {
   activePlayerIndex: 0,
   turnScore: 0,
   sets,
-  diceCount: 6
+  diceCount: 6,
+  history: []
 };
 
 const mutations = make.mutations(state);
@@ -28,5 +29,10 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   plugins: [pathify.plugin],
   state,
-  mutations,
+  mutations: {
+    ...mutations,
+    replaceState(state, newState) {
+      Object.assign(state, newState);
+    }
+  }
 });

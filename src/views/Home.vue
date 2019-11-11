@@ -70,6 +70,7 @@
             3 of a kind - ({{ threeXcount }})
           </v-btn>
           <v-slider
+          :disabled="diceCount < threeXset.dice"
           v-model="threeXmultiplier"
           min="1"
           max="6"
