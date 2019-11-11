@@ -31,7 +31,7 @@
               Dice Left:
             </div>
             <div class="text-center luckiest">
-              6
+              {{ diceCount }}
             </div>
           </v-col>
         </v-row>
@@ -43,8 +43,8 @@
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(sets.one)">
-            One - ({{ setCounts[sets.one] }})
+          @click="incrementSet(sets.one)">
+            One - ({{ sets.one.count }})
           </v-btn>
         </v-col>
         <v-col>
@@ -53,20 +53,21 @@
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(sets.five)">
-            Five - ({{setCounts[sets.five]}})
+          @click="incrementSet(sets.five)">
+            Five - ({{ sets.five.count }})
           </v-btn>
         </v-col>
       </v-row>
       <v-row class="mb-0">
         <v-col>
           <v-btn
+          :disabled="diceCount < threeXset.dice"
           class="luckiest"
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(threeXset)">
-            3 of a kind - ({{threeXcount}})
+          @click="incrementSet(threeXset)">
+            3 of a kind - ({{ threeXcount }})
           </v-btn>
           <v-slider
           v-model="threeXmultiplier"
@@ -81,78 +82,85 @@
       <v-row justify="center" align="center">
         <v-col>
           <v-btn
+          :disabled="diceCount < sets.fourOak.dice"
           class="luckiest"
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(sets.fourOak)">
-            4 of a kind - ({{setCounts[sets.fourOak]}})
+          @click="incrementSet(sets.fourOak)">
+            4 of a kind - ({{ sets.fourOak.count }})
           </v-btn>
         </v-col>
         <v-col>
           <v-btn
+          :disabled="diceCount < sets.threePairs.dice"
           class="luckiest"
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(sets.threePairs)">
-            3 pairs - ({{setCounts[sets.threePairs]}})
-          </v-btn>
-        </v-col>
-      </v-row>
-      <v-row justify="center" align="center">
-        <v-col>
-          <v-btn
-          class="luckiest"
-          dark
-          color="secondary"
-          block
-          @click="incrementTurnScore(sets.fiveOak)">
-            5 of a kind - ({{setCounts[sets.fiveOak]}})
-          </v-btn>
-        </v-col>
-        <v-col>
-          <v-btn
-          class="luckiest"
-          dark
-          color="secondary"
-          block
-          @click="incrementTurnScore(sets.straight)">
-            Straight - ({{setCounts[sets.straight]}})
+          @click="incrementSet(sets.threePairs)">
+            3 pairs - ({{ sets.threePairs.count }})
           </v-btn>
         </v-col>
       </v-row>
       <v-row justify="center" align="center">
         <v-col>
           <v-btn
+          :disabled="diceCount < sets.fiveOak.dice"
           class="luckiest"
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(sets.sixOak)">
-            6 of a kind - ({{setCounts[sets.sixOak]}})
+          @click="incrementSet(sets.fiveOak)">
+            5 of a kind - ({{ sets.fiveOak.count }})
           </v-btn>
         </v-col>
         <v-col>
           <v-btn
+          :disabled="diceCount < sets.straight.dice"
           class="luckiest"
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(sets.twoTriplets)">
-            2 Triplets - ({{setCounts[sets.twoTriplets]}})
+          @click="incrementSet(sets.straight)">
+            Straight - ({{ sets.straight.count }})
           </v-btn>
         </v-col>
       </v-row>
       <v-row justify="center" align="center">
         <v-col>
           <v-btn
+          :disabled="diceCount < sets.sixOak.dice"
           class="luckiest"
           dark
           color="secondary"
           block
-          @click="incrementTurnScore(sets.fourOakPair)">
-            4 of a kind & a pair - ({{ setCounts[sets.fourOakPair] }})
+          @click="incrementSet(sets.sixOak)">
+            6 of a kind - ({{ sets.sixOak.count }})
+          </v-btn>
+        </v-col>
+        <v-col>
+          <v-btn
+          :disabled="diceCount < sets.twoTriplets.dice"
+          class="luckiest"
+          dark
+          color="secondary"
+          block
+          @click="incrementSet(sets.twoTriplets)">
+            2 Triplets - ({{ sets.twoTriplets.count }})
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-row justify="center" align="center">
+        <v-col>
+          <v-btn
+          :disabled="diceCount < sets.fourOakPair.dice"
+          class="luckiest"
+          dark
+          color="secondary"
+          block
+          @click="incrementSet(sets.fourOakPair)">
+            4 of a kind & a pair - ({{ sets.fourOakPair.count }})
           </v-btn>
         </v-col>
       </v-row>
@@ -162,20 +170,16 @@
 
 <script>
 import { sync } from 'vuex-pathify';
-import { sets } from '@/constants';
 
 export default {
   name: 'home',
-  data: () => ({
-    sets,
-  }),
   computed: {
     threeXmultiplier: sync('threeXmultiplier'),
     turnScore: sync('turnScore'),
-    setCounts: sync('setCounts'),
-    setPoints: sync('setPoints'),
+    sets: sync('sets'),
     activePlayerIndex: sync('activePlayerIndex'),
     players: sync('players'),
+    diceCount: sync('diceCount'),
     threeXset() {
       const mapping = {
         1: 'one',
@@ -185,20 +189,22 @@ export default {
         5: 'five',
         6: 'six',
       };
-      return sets[`threeX${mapping[this.threeXmultiplier]}`];
+      return this.sets[`threeX${mapping[this.threeXmultiplier]}`];
     },
     threeXcount() {
       let aggregate = 0;
-      Object.keys(this.setCounts).forEach((set) => {
-        if (set.startsWith('threeX')) aggregate += this.setCounts[set];
+      Object.values(this.sets).forEach((set) => {
+        if (set.name.startsWith('threeX')) aggregate += set.count;
       });
       return aggregate;
     },
   },
   methods: {
-    incrementTurnScore(set) {
-      this.turnScore += this.setPoints[set];
-      this.setCounts[set] += 1;
+    incrementSet(set) {
+      this.turnScore += set.points;
+      this.diceCount -= set.dice;
+      if (this.diceCount === 0) this.diceCount = 6;
+      set.count += 1;
     },
   },
 };
@@ -207,5 +213,8 @@ export default {
 <style scoped>
 .v-messages {
   display: none;
+}
+.theme--dark.v-btn.v-btn--disabled {
+  color: white !important;
 }
 </style>

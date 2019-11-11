@@ -65,15 +65,17 @@ export default {
     turnScore: sync('turnScore'),
     activePlayerIndex: sync('activePlayerIndex'),
     players: sync('players'),
-    setCounts: sync('setCounts'),
+    sets: sync('sets'),
+    diceCount: sync('diceCount')
   },
   methods: {
     endTurn() {
       this.players[this.activePlayerIndex].score += this.turnScore;
       this.turnScore = 0;
-      Object.keys(this.setCounts).forEach((set) => {
-        this.setCounts[set] = 0;
+      Object.values(this.sets).forEach((set) => {
+        set.count = 0;
       });
+      this.diceCount = 6;
       this.activePlayerIndex = this.activePlayerIndex === this.players.length - 1
         ? 0 : this.activePlayerIndex += 1;
     },
