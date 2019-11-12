@@ -53,11 +53,13 @@ export default {
   },
   methods: {
     endTurn() {
+      history.push(this.$store.state);
       this.players[this.activePlayerIndex].score += this.turnScore;
       this.cyclePlayers();
 
     },
     farkle() {
+      history.push(this.$store.state);
       this.cyclePlayers();
     },
     cyclePlayers() {
