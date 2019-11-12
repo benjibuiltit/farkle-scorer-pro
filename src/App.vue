@@ -40,14 +40,26 @@
         Install?
       </v-card-title>
       <v-card-text>
-        This app can be installed to your device. This will allow this web app to look and behave like any other installed up. You will find it in your app lists and be able to pin it to your home screen.
+        {{ installMessage }}
+
+        <template v-if="installInstructionsVisible">
+          <div>
+            1) Tap the Share button in Safari.
+          </div>
+          <div>
+            2) Tap the icon labeled Add to Home Screen.
+          </div>
+          <div>
+            3) Tap Add in the upper-right corner.
+          </div>
+        </template>
       </v-card-text>
       <v-card-actions>
         <v-btn class="luckiest" elevation="0" color="white" dark @click="installPrompt = false">
           Close
         </v-btn>
         <v-spacer/>
-        <v-btn class="luckiest" color="secondary" @click="deferredPrompt.prompt()">
+        <v-btn class="luckiest" color="secondary" @click="install">
           Install
         </v-btn>
       </v-card-actions>
@@ -61,20 +73,35 @@
 import AppBar from '@/components/AppBar'
 import { sync } from 'vuex-pathify';
 import { history } from '@/utils/history';
+import { defer } from 'q';
 
 export default {
   name: 'App',
   data: () => ({
     installPrompt: false,
-    deferredPrompt: ''
+    installInstructionsVisible: false,
+    deferredPrompt: '',
+    isIOS: navigator.userAgent.includes('iPhone') && !navigator.userAgent.includes('Chrome'),
+    isChrome: navigator.userAgent.includes('Chrome'),
+    installMessage: 'This app can be installed to your device. This will allow this web app to look and behave like any other installed up. You will find it in your app lists and be able to pin it to your home screen.',
+    installInstructions: '1) Tap the Share button in Safari.\n\n2) Tap the icon labeled Add to Home Screen.\n3) Tap Add in the upper-right corner.'
   }),
   created () {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      this.deferredPrompt = e;
+    if (this.isIOS) {
       this.installPrompt = true;
-    });
+    } else {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        this.deferredPrompt = e;
+        this.installPrompt = true;
+  
+        this.deferredPrompt.userChoice
+            .finally(() => {
+              this.installPrompt = false;
+            });
+      });
+    }
   },
   components: {
     AppBar
@@ -84,9 +111,17 @@ export default {
     activePlayerIndex: sync('activePlayerIndex'),
     players: sync('players'),
     sets: sync('sets'),
-    diceCount: sync('diceCount')
+    diceCount: sync('diceCount'),
   },
   methods: {
+    install() {
+      if (this.isIOS) {
+        this.installInstructionsVisible = true;
+        this.installMessage = '';
+      } else {
+        this.deferredPrompt.prompt()
+      }
+    },
     endTurn() {
       history.push(this.$store.state);
       this.players[this.activePlayerIndex].score += this.turnScore;

@@ -90,3 +90,5 @@ export const sets = {
     points: 2500,
   },
 };
+
+export const originalSets = Object.assign({}, sets);
