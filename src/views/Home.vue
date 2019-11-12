@@ -182,6 +182,9 @@ export default {
     activePlayerIndex: sync('activePlayerIndex'),
     players: sync('players'),
     diceCount: sync('diceCount'),
+    created() {
+      window.scrollTo(0,0);
+    },
     threeXset() {
       const mapping = {
         1: 'one',

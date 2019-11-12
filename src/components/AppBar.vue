@@ -28,11 +28,23 @@
 </template>
 
 <script>
+import { sets } from '@/constants';
+
 export default {
     name: 'app-bar',
     methods: {
       restart() {
-        console.log('restart');
+        this.$store.commit('replaceState', {
+        players: [],
+        threeXmultiplier: 1,
+        activePlayerIndex: 0,
+        turnScore: 0,
+        sets,
+        diceCount: 6,
+        activeGame: false,
+        playerCount: '',
+      });
+      this.$router.push('/configure');
       }
     }
 }

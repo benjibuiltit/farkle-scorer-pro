@@ -31,6 +31,29 @@
       </v-btn>
 
     </v-bottom-navigation>
+
+    <v-dialog
+    v-model="installPrompt"
+    >
+    <v-card color="">
+      <v-card-title class="luckiest">
+        Install?
+      </v-card-title>
+      <v-card-text>
+        This app can be installed to your device. This will allow this web app to look and behave like any other installed up. You will find it in your app lists and be able to pin it to your home screen.
+      </v-card-text>
+      <v-card-actions>
+        <v-btn class="luckiest" elevation="0" color="white" dark @click="installPrompt = false">
+          Close
+        </v-btn>
+        <v-spacer/>
+        <v-btn class="luckiest" color="secondary" @click="deferredPrompt.prompt()">
+          Install
+        </v-btn>
+      </v-card-actions>
+
+    </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -41,6 +64,18 @@ import { history } from '@/utils/history';
 
 export default {
   name: 'App',
+  data: () => ({
+    installPrompt: false,
+    deferredPrompt: ''
+  }),
+  created () {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      this.deferredPrompt = e;
+      this.installPrompt = true;
+    });
+  },
   components: {
     AppBar
   },
