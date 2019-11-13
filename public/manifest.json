@@ -49,5 +49,22 @@
       "type": "image/png"
     }
   ],
+  "screenshots" : [
+    {
+      "src": "images/screenshots/home.png",
+      "sizes": "1078×1918",
+      "type": "image/png"
+    },
+    {
+      "src": "images/screenshots/scoreboard.png",
+      "sizes": "1078×1918",
+      "type": "image/png"
+    },
+    {
+      "src": "images/screenshots/settings.png",
+      "sizes": "1078×1918",
+      "type": "image/png"
+    }
+  ],
   "splash_pages": null
 }
