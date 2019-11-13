@@ -1,34 +1,15 @@
-# farkle-scorer
+# Farkle Scorer Pro
+A simple score keeping app for Farkle. Download here: [https://farkle-scorer.web.app](https://farkle-scorer.web.app)
 
-## Project setup
-```
-npm install
-```
+## Features
+ 🎲 Unlimited Players  
+ 🎲 Custom player names  
+ 🎲 Rolling 3 one's worth 1000 points (optional)  
+ 🎲 Scoreboard  
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Screenshots
+<div style="display: inline-block">
+    <img src="public/images/screenshots/scoreboard.png" width="400" />
+    <img src="public/images/screenshots/home.png" width="400" />
+    <img src="public/images/screenshots/settings.png" width="400" />
+</div>
