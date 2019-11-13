@@ -1,4 +1,4 @@
-# Farkle Scorer Pro
+# 🎲 Farkle Scorer Pro
 A simple score keeping app for Farkle. Download here: [https://farkle-scorer.web.app](https://farkle-scorer.web.app)
 
 ## Features
