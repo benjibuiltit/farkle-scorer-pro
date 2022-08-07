@@ -49,7 +49,7 @@ export default {
   computed: {
     players: sync('players'),
     rankedPlayers () {
-      return this.players.sort((player1, player2) => player2.score - player1.score);
+      return [...this.players].sort((player1, player2) => player2.score - player1.score);
     }
   }
 }
