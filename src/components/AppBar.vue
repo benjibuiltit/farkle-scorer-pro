@@ -13,9 +13,32 @@
 
       <v-spacer/>
 
-      <v-btn icon color="secondary" x-large @click="restart">
+      <v-btn icon color="secondary" x-large @click="isConfirmingRestart = true">
         <v-icon>mdi-restart</v-icon>
       </v-btn>
+
+    <v-dialog
+    v-model="isConfirmingRestart"
+    >
+    <v-card color="">
+      <v-card-title class="luckiest">
+        Are you sure you want to start a new game?
+      </v-card-title>
+      <v-card-text>
+        {{ restartWarningText }}
+      </v-card-text>
+      <v-card-actions>
+        <v-btn class="luckiest" elevation="0" color="white" dark @click="isConfirmingRestart = false">
+          Return to Game
+        </v-btn>
+        <v-spacer/>
+        <v-btn class="luckiest" color="secondary" @click="restart">
+          New Game
+        </v-btn>
+      </v-card-actions>
+
+    </v-card>
+    </v-dialog>
 
       <v-divider vertical class="mx-2"/>
 
@@ -30,6 +53,10 @@
 <script>
 export default {
     name: 'app-bar',
+    data: () => ({
+      isConfirmingRestart: false,
+      restartWarningText: ''
+    }),
     methods: {
       restart() {
         this.$store.commit('replaceState', {
@@ -133,7 +160,8 @@ export default {
         activeGame: false,
         playerCount: '',
       });
-      this.$router.push('/configure');
+        this.isConfirmingRestart = false;
+        this.$router.push('/configure');
       }
     }
 }

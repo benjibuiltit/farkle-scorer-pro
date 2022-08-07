@@ -73,7 +73,6 @@
 import AppBar from '@/components/AppBar'
 import { sync } from 'vuex-pathify';
 import { history } from '@/utils/history';
-import { defer } from 'q';
 
 export default {
   name: 'App',
