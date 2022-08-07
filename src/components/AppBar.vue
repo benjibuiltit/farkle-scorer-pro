@@ -11,48 +11,53 @@
           </h2>
         </v-toolbar-title>
 
-      <v-spacer/>
-
-      <v-btn icon color="secondary" x-large @click="isConfirmingRestart = true">
-        <v-icon>mdi-restart</v-icon>
-      </v-btn>
-
-    <v-dialog
-    v-model="isConfirmingRestart"
-    >
-    <v-card color="">
-      <v-card-title class="luckiest">
-        Are you sure you want to start a new game?
-      </v-card-title>
-      <v-card-text>
-        {{ restartWarningText }}
-      </v-card-text>
-      <v-card-actions>
-        <v-btn class="luckiest" elevation="0" color="white" dark @click="isConfirmingRestart = false">
-          Return to Game
-        </v-btn>
         <v-spacer/>
-        <v-btn class="luckiest" color="secondary" @click="restart">
-          New Game
+
+      <div v-if="!$route.name.startsWith('configure')">
+        <v-btn icon color="secondary" x-large @click="isConfirmingRestart = true">
+          <v-icon>mdi-restart</v-icon>
         </v-btn>
-      </v-card-actions>
 
-    </v-card>
-    </v-dialog>
+        <v-dialog
+        v-model="isConfirmingRestart"
+        >
+        <v-card color="">
+          <v-card-title class="luckiest">
+            Are you sure you want to start a new game?
+          </v-card-title>
+          <v-card-text>
+            {{ restartWarningText }}
+          </v-card-text>
+          <v-card-actions>
+            <v-btn class="luckiest" elevation="0" color="white" dark @click="isConfirmingRestart = false">
+              Return to Game
+            </v-btn>
+            <v-spacer/>
+            <v-btn class="luckiest" color="secondary" @click="restart">
+              New Game
+            </v-btn>
+          </v-card-actions>
 
-      <v-divider vertical class="mx-2"/>
+        </v-card>
+        </v-dialog>
 
-      <router-link to="/scoreboard">
-        <v-btn icon color="secondary" x-large>
-          <v-icon>mdi-format-list-numbered</v-icon>
-        </v-btn>
-      </router-link>
+        <v-divider vertical class="mx-2"/>
+
+        <router-link to="/scoreboard">
+          <v-btn icon color="secondary" x-large>
+            <v-icon>mdi-format-list-numbered</v-icon>
+          </v-btn>
+        </router-link>
+      </div>
     </v-app-bar>
 </template>
 
 <script>
 export default {
     name: 'app-bar',
+    created() {
+      console.log(this.$route);
+    },
     data: () => ({
       isConfirmingRestart: false,
       restartWarningText: ''
