@@ -46,25 +46,25 @@
         </div>
         <div class="text-center">
           <v-btn
-          :elevation="customPlayerNames ? '2' : '0'"
+          :elevation="useCustomPlayerNames ? '2' : '0'"
           class="luckiest mr-1"
-          :color="customPlayerNames  ? 'secondary' : '#e2e2e2'"
+          :color="useCustomPlayerNames  ? 'secondary' : '#e2e2e2'"
           dark
-          @click="customPlayerNames = true">
+          @click="useCustomPlayerNames = true">
             Yes
           </v-btn>
           <v-btn
-          :elevation="customPlayerNames ? '0' : '2'"
+          :elevation="useCustomPlayerNames ? '0' : '2'"
           class="luckiest ml-1"
-          :color="!customPlayerNames ? 'secondary' : '#e2e2e2'"
+          :color="!useCustomPlayerNames ? 'secondary' : '#e2e2e2'"
           dark
-          @click="customPlayerNames = false">
+          @click="useCustomPlayerNames = false">
             No
           </v-btn>
         </div>
       </v-col>
     </v-row>
-    <v-row justify="center" align="center" v-show="customPlayerNames">
+    <v-row justify="center" align="center" v-show="useCustomPlayerNames">
       <v-col sm="8" md="6" xl="6">
         <div class="text-center luckiest">
           Enter Player Names
@@ -104,7 +104,7 @@ import { sync } from 'vuex-pathify';
 export default {
   name: 'configure',
   data: () => ({
-    customPlayerNames: false,
+    useCustomPlayerNames: false,
     notice: '',
   }),
   computed: {
@@ -116,9 +116,10 @@ export default {
   methods: {
     startGame() {
       if (this.playerCount > 1) {
-        if (!this.customPlayerNames) {
+        if (!this.useCustomPlayerNames) {
           this.createPlayers();
         }
+        this.checkPlayerNames();
         this.activeGame = true;
         this.$router.push('/');
       } else {
@@ -129,7 +130,7 @@ export default {
       const players = [];
       for (let i = 1; i <= this.playerCount; i++) {
         players.push({
-          name: this.customPlayerNames ? '' : `Player: ${i}`,
+          name: this.useCustomPlayerNames ? '' : `Player ${i}`,
           score: 0
         });
       }
@@ -137,14 +138,24 @@ export default {
     },
     setPlayerName(index, name) {
       this.$store.set(`players@[${index}].name`, name);
+    },
+    checkPlayerNames() {
+      const players = this.$store.get(`players`);
+      for (const [index, player] of players.entries()) {
+        if (!player.name) {
+          player.name = `Player ${index + 1}`
+        }
+      }
+
+      this.$store.set('players', players);
     }
   },
   watch: {
-    customPlayerNames (answer)  {
+    useCustomPlayerNames (answer)  {
       if (answer) this.createPlayers();
     },
     playerCount (count) {
-      if (this.customPlayerNames) this.createPlayers();
+      if (this.useCustomPlayerNames) this.createPlayers();
     }
   }
 }
